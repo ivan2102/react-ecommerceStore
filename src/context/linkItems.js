@@ -1,4 +1,5 @@
-export const linkData = [
+export const linkItems = [
+
 
     {
         id: 1,
@@ -30,6 +31,3 @@ export const linkData = [
         path: '/cart'
     }
 ]
-
-    
-

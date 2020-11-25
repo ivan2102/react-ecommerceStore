@@ -1,45 +1,33 @@
-import React from 'react';
-
+import React from 'react'
 
 export default function CartColumns() {
   return (
-
-    
     <div className="container-fluid text-center d-none d-lg-block my-5">
     <div className="row">
-    {/* single column */}
     <div className="col-lg-2">
-    <p className="text-uppercase">product</p>
+    <h6 className="text-uppercase">product</h6>
     </div>
-    {/* end of single column*/}
 
     <div className="col-lg-2">
-    <p className="text-uppercase">name of product</p>
+    <h6 className="text-uppercase">product name</h6>
     </div>
-    {/* end of first product */}
 
     <div className="col-lg-2">
-    <p className="text-uppercase">price</p>
+    <h6 className="text-uppercase">price</h6>
     </div>
-    {/* end of first product */}
 
     <div className="col-lg-2">
-    <p className="text-uppercase">quantity</p>
+    <h6 className="text-uppercase">quantity</h6>
     </div>
-    {/* end of first product */}
 
     <div className="col-lg-2">
-    <p className="text-uppercase">remove</p>
+    <h6 className="text-uppercase">remove</h6>
     </div>
-    {/* end of first product */}
 
     <div className="col-lg-2">
-    <p className="text-uppercase">total</p>
-    </div>
-    {/* end of first product */}
+    <h6 className="text-uppercase">total</h6>
     </div>
     </div>
-  
-  
+    </div>
   )
 }

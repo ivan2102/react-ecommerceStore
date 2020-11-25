@@ -122,7 +122,7 @@ export const items = [
     sys: { id: 8 },
 
     fields: {
-      title: "ROLEX 50TH ANNIVERSARY SUBMARINER 16610LV",
+      title: "ROLEX 50TH ANNIVERSARY SUBMARINER",
       price: 22495,
       company: "rolex",
       description:
@@ -152,7 +152,7 @@ export const items = [
     sys: { id: 10 },
 
     fields: {
-      title: "OMEGA SPEEDMASTER '57 CHRONOGRAPH 41.5MM",
+      title: "OMEGA SPEEDMASTER 57",
       price: 10395,
       company: "omega",
       description:
@@ -167,7 +167,7 @@ export const items = [
     sys: { id: 11 },
 
     fields: {
-      title: "PREOWNED TUDOR BLACK BAY M79230B",
+      title: "PREOWNED TUDOR BLACK",
       price: 3295,
       company: "tudor",
       description:
@@ -181,7 +181,7 @@ export const items = [
     sys: { id: 12 },
 
     fields: {
-      title: "Tissot Dress Watch",
+      title: "TISSOT DRESS WATCH",
       price: 630,
       company: "tissot",
       description:

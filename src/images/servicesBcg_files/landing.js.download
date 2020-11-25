@@ -1,0 +1,209 @@
+var horoilogicalLanding = function () {
+    var posts = [],
+        filteredPosts = [],
+        lazyLoading = false,
+        filtered = false,
+
+        //in horologicalLanding.php
+        gridTemplate = _.template($("#gridItem").html()),
+
+        menuOpen = false,
+        //lazy loading
+        totalPosts = 0,
+        visiblePosts = 1,
+        loadIncrement = 6;
+
+
+    //accepts array of objects to draw
+    function drawGrid (postsToDraw, clearExisting) {
+
+        if(clearExisting) {
+            $(".horilogical-landing-grid").html("");
+        } else {
+            $(".horilogical-landing-grid .clearBoth").remove()
+        }
+
+        if(postsToDraw.length) {
+            for(var i=0; i<postsToDraw.length; i++) {
+                $(".horilogical-landing-grid").append( gridTemplate(postsToDraw[i]) );
+            }
+        } else {
+            $(".horilogical-landing-grid").append('<div class="grid-no-matches">No matches.</div>');
+        }
+
+        visiblePosts = $('.horilogical-landing-grid .grid-item').length+1;
+
+        $(".horilogical-landing-grid").append( "<br class=\"clearBoth\" />" );
+    }
+
+
+    function resetGrid () {
+        var displayPosts = [];
+        filtered = false;
+
+        for(var i = 0; i<Math.min(totalPosts,loadIncrement); i++) {
+            displayPosts.push(posts[i]);
+        }
+        drawGrid(displayPosts,true);
+    }
+
+    function loadData () {
+        $.get('/horological-posts').success(function (data) {
+            posts = data;
+
+            //use this to test lazing loading
+            /*
+            for(var i=0; i<7; i++){
+                posts.push(data[i]);
+            }
+            for(var i=0; i<7; i++){
+                posts.push(data[i]);
+            }
+            console.log(posts.length);
+            */
+
+            totalPosts = posts.length;
+            visiblePosts = $('.horilogical-landing-grid .grid-item').length+1;
+        });
+    }
+
+    function addEventListeners () {
+
+        $.fn.clickOutsideThisElement = function (callback) {
+            return this.each(function () {
+                var self = this;
+                $(document).click(function (e) {
+                    if (!$(e.target).closest(self).length) {
+                        callback.call(self, e)
+                    }
+                })
+            });
+        };
+
+        $('.horilogical-landing-grid').on ('click', '.grid-item', function () {
+            window.location = $(this).attr('data-url');
+            return false;
+        });
+
+        $('.horilogical-landing-mobile-nav button').on ('click', function () {
+            $('.horilogical-landing-nav').addClass('active');
+            return false;
+        });
+
+        $('.saveBtn').on('click', function () {
+            $('.horilogical-landing-nav').removeClass('active');
+            return false;
+        });
+
+        $('.horilogical-landing-nav ul li a').on('click touchstart', function () {
+
+            //only one selected nav option at a time
+            if($('.horilogical-landing-nav ul li').hasClass('selected') && !$(this).parent().hasClass('selected')) {
+                $('.horilogical-landing-nav ul li').removeClass('selected');
+            }
+
+            $(this).parent().toggleClass('selected');
+            return false;
+        });
+
+        $('.horilogical-landing-nav ul li p input').on('blur', function () {
+            if(($(this).val() === "")) $(this).parent().parent().toggleClass('selected');
+        });
+
+        $('input[name="archives[]"]').on('click', function () {
+            checkboxFilter($(this).attr('name'),'date');
+            $('.horilogical-landing-nav ul li').removeClass('selected');
+        });
+
+        $('input[name="title[]"]').on('click', function () {
+            checkboxFilter($(this).attr('name'),'title');
+            $('.horilogical-landing-nav ul li').removeClass('selected');
+        });
+
+        $('input[name="archives[]"]').clickOutsideThisElement(function() {
+            $('.horilogical-landing-nav ul .filter-li').removeClass('selected');
+        });
+
+        $('input[name="title[]"]').clickOutsideThisElement(function() {
+            $('.horilogical-landing-nav ul .filter-li').removeClass('selected');
+        });
+
+        $('.horilogical-landing-nav input[type="text"]').on('keyup', function () {
+            var searchStr = $(this).val().toLowerCase();
+
+            //if nothing selected, reset grid
+            if($('.horilogical-landing-nav input[type="text"]').val()==="" && !$('input:checked').length) {
+                resetGrid();
+            } else {
+                filteredPosts = _.filter(posts, function (val) {
+                    return (val.title.toLowerCase().indexOf(searchStr,0) > -1) || (val.description.toLowerCase().indexOf(searchStr,0) > -1);
+                });
+
+                //disable lazy loading when filtering
+                filtered = true;
+
+                drawGrid(filteredPosts,true);
+            }
+        });
+
+        $(window).scroll(function() {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 150) lazyLoad();
+        });
+    }
+
+    function checkboxFilter (inputName, objKey) {
+        var checked = $('input[name="' + inputName + '"]:checked'), vals = [];
+
+        //if nothing selected, reset grid
+        if(!checked.length && !$('input:checked').length && $('.horilogical-landing-nav input[type="text"]').val()==="") {
+            resetGrid();
+        } else {
+            for (var i = 0; i < checked.length; i++) {
+                vals.push($(checked[i]).val());
+            }
+
+            filteredPosts = _.filter(posts, function (val) {
+                return _.contains(vals, val[objKey]);
+            });
+
+            //disable lazy loading when filtering
+            filtered = true;
+
+            drawGrid(filteredPosts,true);
+        }
+    }
+
+    function lazyLoad () {
+        if(!lazyLoading && !filtered && visiblePosts < totalPosts) {
+            lazyLoading = true;
+            //$('.horilogical-landing-loading').show();
+            console.log(totalPosts);
+            console.log(visiblePosts);
+            var loadPosts = [];
+            for(var i = visiblePosts; i<Math.min(totalPosts,(visiblePosts+loadIncrement)); i++) 
+            {
+                if (i<totalPosts) {
+                    loadPosts.push(posts[i]);
+                }
+            }
+            drawGrid(loadPosts,false);
+
+            setTimeout(function () {
+                $('.horilogical-landing-loading').hide();
+                lazyLoading = false;
+            },1000);
+        } else if (visiblePosts >= totalPosts) {
+            $(window).scroll(null);
+        }
+    };
+
+    (function () {
+        //reset input fields
+        $('input[name="archives[]"]:checked').attr('checked',false);
+        $('input[name="title[]"]:checked').attr('checked',false);
+        $('.horilogical-landing-nav input[type="text"]').val('');
+
+        addEventListeners();
+        loadData();
+    })();
+};

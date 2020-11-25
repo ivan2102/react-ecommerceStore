@@ -7,11 +7,11 @@ import FeaturedProducts from '../components/FeaturedProducts';
 export default function HomePage() {
   return (
     <>
-    <Hero title="awesome watches" max="true">
-   <Link to="/products" className="main-link" style={{margin: '2rem'}}>our products</Link> 
-    </Hero>
-    <Services/>
-    <FeaturedProducts/>
+      <Hero title="awesome watches" max="true">
+      <Link to="/products" className="main-link" style={{margin: '2rem'}}>our products</Link>
+      </Hero>
+      <Services/>
+      <FeaturedProducts/>
     </>
   )
 }

@@ -1,29 +1,29 @@
 import React from 'react';
+import { ProductConsumer } from '../context';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FaSearch,FaCartPlus } from 'react-icons/fa';
-import { ProductConsumer } from '../context';
 
-export default function Product({product}) {
+export default function Products({product}) {
   return (
-     
+
     <ProductConsumer>
     {value => {
 
-      const { addToCart,setSingleProduct } = value;
+      const {getSingleProduct,addToCart} = value;
 
       return(
 
-        <ProductWrapper className="col-10 mx-auto col-sm-8 col-md-6 col-lg-4 my-3">
+        <ProductsWrapper className="col-10 mx-auto col-sm-8 col-md-6 col-lg-4 my-3">
         <div className="card">
         <div className="img-container">
-        <img src={product.image} alt="product" style={{ height: "320px" }} className="card-img-top p-5"/>
-
+        <img src={product.image} className="card-img-top p-5" style={{height: '320px'}} alt="product"/>
         <div className="product-icons">
-        <Link to={`/products/${product.id}`} onClick={() => setSingleProduct(product.id)}>
-        <FaSearch className="icon" />
+        <Link to={`/products/${product.id}`} onClick={() => getSingleProduct(product.id)}>
+        <FaSearch className="icon"/>
         </Link>
-        <FaCartPlus className="icon" onClick={() => addToCart(product.id) }/>
+
+        <FaCartPlus className="icon" onClick={() => addToCart(product.id)}/>
         </div>
         </div>
 
@@ -32,24 +32,23 @@ export default function Product({product}) {
         <p className="mb-0 text-main">${product.price}</p>
         </div>
         </div>
-        </ProductWrapper>
+        </ProductsWrapper>
       )
     }}
     </ProductConsumer>
+     
   )
 }
 
-const ProductWrapper = styled.div`
+const ProductsWrapper = styled.div`
 
 .card {
-
   box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.3);
   transition: var(--mainTransition);
   height: 100%;
 }
 
 .card:hover {
-
   box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.5);
   cursor: pointer;
 }
@@ -62,26 +61,26 @@ const ProductWrapper = styled.div`
   transform: scale(1.15);
   opacity: 0.2;
 }
-
 .img-container {
-  position: relative
+  position: relative;
 }
 
 .product-icons {
-  transition: var(--mainTransition);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+  transition: var(--mainTransition);
   opacity: 0;
 }
 
 .icon {
+ 
+  margin: 1rem;
+  padding: 0.5rem;
   font-size: 2.5rem;
   color: var(--primaryColor);
   background: var(--mainBlack);
-  margin: 1rem;
-  padding: 0.5rem;
   border-radius: 0.5rem;
 }
 
@@ -91,7 +90,8 @@ const ProductWrapper = styled.div`
 
 .card-body {
   font-weight: bold;
+  letter-spacing: var(--mainSpacing);
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
+
 `
